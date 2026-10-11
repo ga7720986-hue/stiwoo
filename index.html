@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>小说 · 动漫记录</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23facde0'/%3E%3Cpath d='M12 5.5v13' stroke='%233e3630' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M7.5 5.5h9.5' stroke='%233e3630' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M8 10.5h8M8 14h5' stroke='%233e3630' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#fef6f6; --card:#e1f9ff; --accent:#facde0; --accent-deep:#e79bbd;
+  --ink:#3e3630; --muted:#8f7f78; --line:#efdde2; --white:#fffdfc;
+  --gold:#eda24f; --star-off:#e3d6d0; --danger:#c25b5b;
+  --radius:16px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  line-height:1.6;padding:0 16px calc(24px + env(safe-area-inset-bottom));
+}
+.wrap{max-width:900px;margin:0 auto;padding:16px 0 0}
+button{font-family:inherit;color:inherit}
+h1,h2,h3,p{margin:0}
+ul{list-style:none;margin:0;padding:0}
+.hidden{display:none !important}
+.ic{display:inline-flex}
+.ic svg{width:15px;height:15px;stroke:currentColor}
+
+/* ===== 顶部 ===== */
+.topbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;background:var(--white);border:1px solid var(--line);border-radius:20px;padding:14px 18px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-icon{width:44px;height:44px;border-radius:14px;background:var(--accent);display:flex;align-items:center;justify-content:center;flex:none}
+.brand-icon svg{width:26px;height:26px;stroke:var(--ink)}
+h1{font-size:20px;font-weight:700;line-height:1.3}
+.tagline{font-size:12px;color:var(--muted)}
+.top-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.save-badge{font-size:12px;color:var(--muted);background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:5px 10px;white-space:nowrap}
+.save-badge.saving{color:var(--accent-deep)}
+.backup-hint{background:#fff3da;color:#8a641f;border:1px solid #f4e3bd;border-radius:14px;padding:10px 14px;font-size:14px;margin-top:12px}
+.backup-hint svg{width:14px;height:14px;stroke:currentColor;vertical-align:-2px;margin-right:6px}
+
+/* ===== 按钮 ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:999px;padding:9px 14px;font-size:14px;cursor:pointer;background:var(--white);border:1px solid var(--line);min-height:38px;transition:filter .15s,transform .1s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--accent);border-color:transparent}
+.btn.primary:hover{filter:brightness(.97)}
+.btn.ghost{background:transparent}
+.btn.danger{border-color:#f0dcdc;color:var(--danger);background:#fff}
+.btn.small{padding:7px 12px;min-height:34px;font-size:13px}
+.mini-btn{display:inline-flex;align-items:center;justify-content:center;gap:4px;border:1px solid var(--line);background:var(--white);border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer;min-height:32px;transition:filter .15s,transform .1s}
+.mini-btn:active{transform:scale(.96)}
+.mini-btn.primary{background:var(--accent);border-color:transparent}
+.mini-btn.danger{color:var(--danger);border-color:#f0dcdc}
+.mini-btn.icon{width:34px;padding:0}
+.mini-btn svg{width:14px;height:14px;stroke:currentColor}
+
+/* ===== 概览 ===== */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}
+.stat-card{background:var(--card);border-radius:var(--radius);padding:14px 10px;text-align:center}
+.stat-num{font-size:26px;font-weight:700;display:block;line-height:1.2}
+.stat-label{font-size:12px;color:var(--muted)}
+
+/* ===== Tab ===== */
+.tabs{display:flex;gap:10px;margin-bottom:14px}
+.tab{flex:1;max-width:240px;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:999px;border:1px solid var(--line);background:var(--white);cursor:pointer;font-size:15px;min-height:46px}
+.tab.active{background:var(--accent);border-color:transparent;font-weight:600}
+.tab svg{width:18px;height:18px;stroke:currentColor}
+
+/* ===== 区块 ===== */
+.section{background:var(--white);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:14px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.section-head h2{font-size:17px;font-weight:700}
+.group{margin-bottom:16px}
+.group:last-child{margin-bottom:0}
+.group-title{font-size:13px;color:var(--muted);margin:0 0 8px 4px;font-weight:600}
+.group-empty{color:var(--muted);font-size:13px;padding:8px 4px}
+
+/* ===== 预读 ===== */
+.pre-list{display:flex;flex-direction:column;gap:8px}
+.pre-item{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border-radius:14px;padding:10px 12px}
+.pre-main{display:flex;align-items:baseline;gap:8px;min-width:0;flex:1}
+.pre-name{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pre-sub{font-size:12px;color:var(--muted);flex:none}
+.pre-actions{display:flex;gap:8px;flex:none}
+.pre-empty{color:var(--muted);font-size:13px;padding:6px 2px}
+
+/* ===== 折叠卡 ===== */
+.card{background:var(--card);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+.card-head{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;flex-wrap:wrap;user-select:none}
+.arrow{flex:none;display:inline-flex;transition:transform .25s ease}
+.card.open .arrow{transform:rotate(180deg)}
+.arrow svg{width:16px;height:16px;stroke:var(--muted)}
+.card-title{flex:1 1 140px;min-width:0;display:flex;flex-direction:column}
+.card-name{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-sub{font-size:12px;color:var(--muted)}
+.chip{flex:none;font-size:11px;background:var(--accent);color:#8a4a66;border-radius:999px;padding:2px 10px}
+.stars{flex:none;display:inline-flex;gap:1px}
+.star{display:inline-flex;align-items:center;justify-content:center;background:none;border:none;padding:0 2px;cursor:pointer;line-height:0;min-width:24px;min-height:24px}
+.star svg{width:19px;height:19px;transition:transform .15s}
+.star:hover svg{transform:scale(1.18)}
+.card-body{display:none;padding:2px 14px 14px;border-top:1px dashed var(--line)}
+.card.open .card-body{display:block}
+.meta-line{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);padding:10px 0 8px}
+.status-chip{font-size:11px;border-radius:999px;padding:2px 10px;background:var(--white);border:1px solid var(--line)}
+.note-field{margin:8px 0}
+.note-label{font-size:12px;color:#8a4a66;background:var(--accent);border-radius:8px;padding:2px 10px;display:inline-block;margin-bottom:4px}
+.note-text{font-size:14px;white-space:pre-wrap;word-break:break-word}
+.note-empty{font-size:13px;color:var(--muted)}
+.card-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+
+/* ===== 空态 ===== */
+.big-empty{text-align:center;padding:36px 20px;background:var(--white);border:1px dashed var(--line);border-radius:20px;margin-bottom:14px}
+.be-icon{width:56px;height:56px;margin:0 auto 12px;border-radius:18px;background:var(--accent);display:flex;align-items:center;justify-content:center}
+.be-icon svg{width:30px;height:30px;stroke:var(--ink)}
+.big-empty p{color:var(--muted);font-size:14px;margin-bottom:14px}
+
+/* ===== 弹窗 ===== */
+.modal-mask{position:fixed;inset:0;background:rgba(62,54,48,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:100}
+.modal{background:var(--white);border-radius:22px;width:100%;max-width:600px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden}
+.modal-scroll{overflow:auto;padding:22px}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:14px}
+.modal-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.modal-title-row h3{font-size:18px;font-weight:700}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.icon-btn svg{width:18px;height:18px;stroke:var(--muted)}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field-grid label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+.field-grid input,.field-grid select{width:100%}
+input,select,textarea{font-family:inherit;color:var(--ink);font-size:16px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent-deep);outline-offset:0;border-color:transparent}
+.dt-rating{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);justify-content:center}
+.dt-rating .stars{margin-top:2px}
+
+/* ===== 追问卡 ===== */
+.q-card{border:1px solid var(--line);border-radius:16px;margin-top:12px;background:#fff;overflow:hidden}
+.q-head{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer}
+.q-num{width:24px;height:24px;border-radius:8px;background:var(--accent);color:#8a4a66;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.q-title{font-weight:600;font-size:14px;flex:1}
+.q-done{font-size:11px;color:#3a7d5c;background:#e3f6ea;border-radius:999px;padding:2px 8px;flex:none}
+.q-body{display:none;padding:0 14px 14px}
+.q-card.open .q-body{display:block}
+.q-card.open .arrow{transform:rotate(180deg)}
+.q-hint{font-size:13px;color:var(--muted);margin-bottom:8px}
+.q-actions{margin-top:8px;text-align:right}
+
+.modal-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;margin-top:18px}
+.modal-actions .btn{min-height:44px}
+.modal-note{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.7}
+
+/* ===== 其他 ===== */
+.foot{text-align:center;color:var(--muted);font-size:12px;margin-top:20px}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:#3e3630;color:#fff;padding:10px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:200;max-width:86vw}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ===== 移动端 ===== */
+@media (max-width:767px){
+  body{padding:0 12px calc(24px + env(safe-area-inset-bottom))}
+  .wrap{padding:12px 0 0}
+  .topbar{padding:12px 14px}
+  .top-actions{width:100%}
+  .top-actions .btn{flex:1 1 auto;min-height:44px}
+  .top-actions .save-badge{margin-left:auto}
+  .stats{grid-template-columns:repeat(2,1fr);gap:10px}
+  .btn,.mini-btn{min-height:44px}
+  .mini-btn{padding:6px 14px}
+  .mini-btn.icon{width:44px}
+  .section-head .btn{min-height:44px}
+  .field-grid{grid-template-columns:1fr}
+  .star{min-width:44px;min-height:44px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== 顶部栏 ===== -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      </div>
+      <div>
+        <h1>小说 · 动漫记录</h1>
+        <p class="tagline">我的读书与观影手账 · 数据仅保存在本浏览器</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span id="saveBadge" class="save-badge">已保存</span>
+      <button class="btn primary" data-action="export" title="导出 JSON 备份">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></span>
+        <span>导出 JSON 备份</span>
+      </button>
+      <button class="btn" data-action="import" title="从备份文件恢复">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m0 0L8 7m4-4l4 4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></span>
+        <span>导入恢复</span>
+      </button>
+      <button class="btn ghost" data-action="clear-sample">清空示例数据</button>
+      <button class="btn danger" data-action="clear-all">清空全部</button>
+    </div>
+    <input type="file" id="importFile" accept=".json,application/json" hidden>
+  </header>
+
+  <div id="backupHint" class="backup-hint hidden"></div>
+
+  <!-- ===== 概览卡 ===== -->
+  <section class="stats" aria-label="概览">
+    <div class="stat-card"><span class="stat-num" id="statPreBook">0</span><span class="stat-label">预读书目</span></div>
+    <div class="stat-card"><span class="stat-num" id="statDoneBook">0</span><span class="stat-label">已读完</span></div>
+    <div class="stat-card"><span class="stat-num" id="statWishShow">0</span><span class="stat-label">想看的番</span></div>
+    <div class="stat-card"><span class="stat-num" id="statDoneShow">0</span><span class="stat-label">已看完</span></div>
+  </section>
+
+  <!-- ===== Tab ===== -->
+  <nav class="tabs" aria-label="分区切换">
+    <button class="tab active" id="tab-book" data-action="tab-book">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      读书
+    </button>
+    <button class="tab" id="tab-show" data-action="tab-show">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2.5"/><path d="M7 4v16M17 4v16M2 9h5M2 15h5M17 9h5M17 15h5"/></svg>
+      观影
+    </button>
+  </nav>
+
+  <!-- ===== 预读版块 ===== -->
+  <section class="section">
+    <div class="section-head">
+      <h2 id="preTitle">想读的书</h2>
+      <button class="btn primary" id="preAddBtn" data-action="add-pre">+ 加一本</button>
+    </div>
+    <ul id="preList" class="pre-list"></ul>
+    <div id="preEmpty" class="pre-empty hidden"></div>
+  </section>
+
+  <!-- ===== 正式列表 ===== -->
+  <section class="section">
+    <div class="section-head">
+      <h2 id="mainTitle">读书记录</h2>
+      <button class="btn primary" data-action="add-main">+ 记一条</button>
+    </div>
+    <div class="group">
+      <h3 class="group-title" id="doingGroupTitle">在读</h3>
+      <ul id="doingList" class="card-list"></ul>
+      <div id="doingEmpty" class="group-empty hidden"></div>
+    </div>
+    <div class="group">
+      <h3 class="group-title" id="doneGroupTitle">已读完</h3>
+      <ul id="doneList" class="card-list"></ul>
+      <div id="doneEmpty" class="group-empty hidden"></div>
+    </div>
+    <div id="mainEmpty" class="big-empty hidden">
+      <div class="be-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h7M9 11h7"/></svg>
+      </div>
+      <p id="bigEmptyText">还没有任何记录</p>
+      <button class="btn primary" data-action="add-main">+ 记一条</button>
+    </div>
+  </section>
+
+  <footer class="foot">本地存储 · 建议定期导出备份，换设备时可导入恢复</footer>
+</div>
+
+<div id="modalRoot"></div>
+<div id="toast" role="status"></div>
+
+<script>
+'use strict';
+/* ================================================================
+ * 小说 · 动漫记录 —— 单文件本地存储应用
+ * 渲染链路：refreshAll() → renderStats / renderPreList / renderMainList / renderBackupHint
+ * 数据变更统一走：改 state → saveData() → refreshAll()
+ * ================================================================ */
+
+/* ===== 配置 ===== */
+const STORAGE_KEY = 'novelAnimeLog.v1';
+const BOOK = {
+  side:'book', name:'读书',
+  categories:['文学小说','历史社科','心理成长','商业经管','科普科技','其他'],
+  statusLabels:{wish:'想看', doing:'在读', done:'已读完'},
+  questions:[
+    {key:'synopsis',  label:'剧情梗概', hint:'这本书讲了一个什么故事？主线情节是什么？试着用三句话概括。'},
+    {key:'characters',label:'人物角色', hint:'哪个人物让你印象最深？他做了什么选择？为什么一直记得他？'},
+    {key:'quotes',    label:'金句摘录', hint:'摘录几句让你心动或难忘的句子，最好注明大致页码。'},
+    {key:'feelings',  label:'我的感受', hint:'读这本书时你的心情怎样？哪个情节最打动你？'},
+    {key:'thinking',  label:'思考追问', hint:'这本书让你联想到什么问题？有哪些值得继续深挖的追问？'},
+    {key:'review',    label:'长评',     hint:'写一段较完整的评论：结构、文笔、观点与不足，都可以展开聊聊。'}
+  ],
+  preTitle:'想读的书', preAdd:'+ 加一本', doingLabel:'在读', doneLabel:'已读完',
+  startAction:'开始读', markDone:'标记为已读完'
+};
+const SHOW = {
+  side:'show', name:'观影',
+  categories:['电影','剧集','纪录片','综艺','动漫'],
+  statusLabels:{wish:'想看', doing:'在看', done:'已看完'},
+  questions:[
+    {key:'synopsis',  label:'剧情梗概', hint:'这部片子讲了什么故事？主线是什么？用三句话概括一下。'},
+    {key:'characters',label:'人物角色', hint:'哪个角色让你印象最深？他做了什么选择？为什么记得他？'},
+    {key:'quotes',    label:'经典台词', hint:'摘录几句难忘的台词，最好注明出自哪一集或哪一段。'},
+    {key:'feelings',  label:'我的感受', hint:'看这部片子时你的心情怎样？哪个画面最打动你？'},
+    {key:'thinking',  label:'思考追问', hint:'这部片子让你联想到什么问题？有哪些值得深挖的追问？'},
+    {key:'review',    label:'长评',     hint:'写一段较完整的评论：叙事、表演、视听语言与遗憾，都可以展开聊聊。'}
+  ],
+  preTitle:'想看的番', preAdd:'+ 加一部', doingLabel:'在看', doneLabel:'已看完',
+  startAction:'开始看', markDone:'标记为已看完'
+};
+
+/* ===== 状态 ===== */
+let state = { books:[], shows:[] };
+let currentSide = 'book';
+let expanded = new Set();
+let detailId = null;
+let qOpen = {};
+let pendingConfirm = null;
+let importPending = null;
+let saveTimer = null;
+let toastTimer = null;
+
+/* ===== 工具函数 ===== */
+const $ = (sel) => document.querySelector(sel);
+function uid(){
+  return 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+}
+function fmtDate(d){
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return y + '-' + m + '-' + day;
+}
+function todayStr(){ return fmtDate(new Date()); }
+function daysAgo(n){ const d = new Date(); d.setDate(d.getDate()-n); return fmtDate(d); }
+function parseDate(s){
+  if(!s) return null;
+  const p = s.split('-');
+  if(p.length !== 3) return null;
+  const y = +p[0], m = +p[1], d = +p[2];
+  if(!y || !m || !d) return null;
+  return new Date(y, m-1, d);
+}
+function daysBetween(a, b){
+  const da = parseDate(a), db = parseDate(b);
+  if(!da || !db) return null;
+  return Math.round((db - da) / 86400000);
+}
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, (c)=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+function cfgOf(side){ return side === 'show' ? SHOW : BOOK; }
+function listOf(side){ return side === 'show' ? state.shows : state.books; }
+function getRec(id){
+  return state.books.find(r => r.id === id) || state.shows.find(r => r.id === id);
+}
+
+/* ===== 内联图标 ===== */
+const ICONS = {
+  chevron : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
+  trash   : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>',
+  edit    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
+  close   : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>',
+  play    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>',
+  warn    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01"/><path d="M10.3 3.9L2.7 18a2 2 0 0 0 1.8 3h15a2 2 0 0 0 1.8-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>'
+};
+function icon(name){ return '<span class="ic">' + ICONS[name] + '</span>'; }
+function starSVG(on){
+  const fill = on ? 'var(--gold)' : 'var(--star-off)';
+  return '<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path d="M12 2.6l2.83 6.07 6.77.96-4.9 4.73 1.16 6.74L12 18.4l-5.86 3.3 1.16-6.74-4.9-4.73 6.77-.96z" fill="' + fill + '" stroke="var(--gold)" stroke-width="0.9"/></svg>';
+}
+function starHTML(rating, id){
+  let html = '';
+  for(let i = 1; i <= 5; i++){
+    html += '<button class="star ' + (i <= rating ? 'on' : '') + '" data-action="rate" data-id="' + id + '" data-rating="' + i + '" aria-label="' + i + ' 星" title="' + i + ' 星">' + starSVG(i <= rating) + '</button>';
+  }
+  return html;
+}
+
+/* ===== 数据存取 ===== */
+function sampleData(){
+  return {
+    books:[
+      { id:uid(), name:'示例·在读的一本书', sub:'示例作者', category:'文学小说', status:'doing',
+        startDate:daysAgo(6), endDate:'', rating:3,
+        notes:{ synopsis:'示例笔记：这里记录这本书讲了什么。保存后可继续展开其余维度，逐条填写。',
+                characters:'', quotes:'', feelings:'', thinking:'', review:'' },
+        isSample:true },
+      { id:uid(), name:'示例·已读完的一本书', sub:'示例作者', category:'心理成长', status:'done',
+        startDate:daysAgo(32), endDate:daysAgo(2), rating:4,
+        notes:{ synopsis:'示例：这是一段关于成长的旅程，主线清晰，读到后半程节奏明显变快。',
+                characters:'示例：主角的选择让人印象深刻，他放弃了最安稳的那条路。',
+                quotes:'示例摘录：“好的故事会留在心里很久。”（示例句子）',
+                feelings:'示例：读到结尾时心里很安静，像是陪一个人走完了很长一段路。',
+                thinking:'示例：如果换作是我，会不会做出同样的选择？',
+                review:'' },
+        isSample:true },
+      { id:uid(), name:'示例·想看的一本书', sub:'示例作者', category:'科普科技', status:'wish',
+        startDate:'', endDate:'', rating:0, notes:{}, isSample:true }
+    ],
+    shows:[
+      { id:uid(), name:'示例·已看完的一部片', sub:'示例导演', category:'动漫', status:'done',
+        startDate:daysAgo(15), endDate:daysAgo(4), rating:5,
+        notes:{ synopsis:'示例：一个关于告别与重新出发的故事。',
+                characters:'示例：配角的那句台词一直忘不掉。',
+                quotes:'示例台词：“我们走吧，前面的路还很长。”（示例句子）',
+                feelings:'示例：看完之后在片尾坐了很久。',
+                thinking:'示例：结局真的是最好的结局吗？',
+                review:'示例长评：画面、配乐和叙事节奏都很完整，值得二刷。' },
+        isSample:true },
+      { id:uid(), name:'示例·想看的一部番', sub:'示例导演', category:'电影', status:'wish',
+        startDate:'', endDate:'', rating:0, notes:{}, isSample:true }
+    ]
+  };
+}
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && Array.isArray(parsed.books) && Array.isArray(parsed.shows)){
+        state.books = parsed.books;
+        state.shows = parsed.shows;
+        return;
+      }
+    }
+  }catch(e){ /* 数据损坏则重新初始化 */ }
+  const s = sampleData();
+  state.books = s.books;
+  state.shows = s.shows;
+  saveData(false);
+}
+function saveData(showStatus){
+  if(showStatus !== false) markSaving();
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }catch(e){
+    toast('保存失败：' + (e && e.message ? e.message : '存储空间可能已满'));
+    return;
+  }
+  if(showStatus !== false) scheduleSaved();
+}
+function markSaving(){
+  const b = $('#saveBadge');
+  if(!b) return;
+  b.textContent = '保存中…';
+  b.classList.add('saving');
+}
+function scheduleSaved(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    const b = $('#saveBadge');
+    if(!b) return;
+    b.textContent = '已保存';
+    b.classList.remove('saving');
+  }, 500);
+}
+
+/* ===== 渲染（只读，互不调用） ===== */
+function refreshAll(){
+  renderStats();
+  renderPreList();
+  renderMainList();
+  renderBackupHint();
+}
+function renderStats(){
+  const preBook = state.books.filter(r => r.status === 'wish').length;
+  const doneBook = state.books.filter(r => r.status === 'done').length;
+  const wishShow = state.shows.filter(r => r.status === 'wish').length;
+  const doneShow = state.shows.filter(r => r.status === 'done').length;
+  const set = (id, n) => { const el = $('#' + id); if(el) el.textContent = String(n); };
+  set('statPreBook', preBook);
+  set('statDoneBook', doneBook);
+  set('statWishShow', wishShow);
+  set('statDoneShow', doneShow);
+}
+function renderBackupHint(){
+  const el = $('#backupHint');
+  if(!el) return;
+  const n = state.books.length + state.shows.length;
+  if(n >= 30){
+    el.classList.remove('hidden');
+    el.innerHTML = icon('warn') + '数据已积累 <strong>' + n + '</strong> 条，建议导出备份。';
+  }else{
+    el.classList.add('hidden');
+  }
+}
+function renderPreList(){
+  const cfg = cfgOf(currentSide);
+  const list = listOf(currentSide);
+  const wish = list.filter(r => r.status === 'wish');
+  const title = $('#preTitle');
+  const addBtn = $('#preAddBtn');
+  const emptyEl = $('#preEmpty');
+  const ul = $('#preList');
+  if(title) title.textContent = cfg.preTitle;
+  if(addBtn) addBtn.textContent = cfg.preAdd;
+  if(!ul) return;
+  if(!wish.length){
+    ul.innerHTML = '';
+    if(emptyEl){
+      emptyEl.classList.remove('hidden');
+      emptyEl.textContent = cfg.preTitle + '还是空的，用右上角「' + cfg.preAdd + '」记下想' + (currentSide==='book'?'读':'看') + '的。';
+    }
+    return;
+  }
+  if(emptyEl) emptyEl.classList.add('hidden');
+  ul.innerHTML = wish.map(function(r){
+    return '<li class="pre-item">' +
+      '<div class="pre-main">' +
+        '<span class="pre-name">' + esc(r.name) + '</span>' +
+        (r.sub ? '<span class="pre-sub">' + esc(r.sub) + '</span>' : '') +
+      '</div>' +
+      '<div class="pre-actions">' +
+        '<button class="mini-btn primary" data-action="start" data-id="' + r.id + '">' + icon('play') + cfg.startAction + '</button>' +
+        '<button class="mini-btn icon danger" data-action="del" data-id="' + r.id + '" aria-label="删除">' + ICONS.trash + '</button>' +
+      '</div>' +
+    '</li>';
+  }).join('');
+}
+function renderMainList(){
+  const cfg = cfgOf(currentSide);
+  const list = listOf(currentSide);
+  const doing = list.filter(r => r.status === 'doing');
+  const done = list.filter(r => r.status === 'done');
+  const mainTitle = $('#mainTitle');
+  const doingTitle = $('#doingGroupTitle');
+  const doneTitle = $('#doneGroupTitle');
+  const doingUl = $('#doingList');
+  const doneUl = $('#doneList');
+  const doingEmpty = $('#doingEmpty');
+  const doneEmpty = $('#doneEmpty');
+  const bigEmpty = $('#mainEmpty');
+  if(mainTitle) mainTitle.textContent = currentSide === 'book' ? '读书记录' : '观影记录';
+  if(doingTitle) doingTitle.textContent = cfg.doingLabel;
+  if(doneTitle) doneTitle.textContent = cfg.doneLabel;
+
+  if(doingUl) doingUl.innerHTML = doing.map(r => cardHTML(r, cfg)).join('');
+  if(doneUl) doneUl.innerHTML = done.map(r => cardHTML(r, cfg)).join('');
+  if(doingEmpty){
+    doingEmpty.classList.toggle('hidden', doing.length > 0);
+    doingEmpty.textContent = '还没有' + (currentSide==='book'?'在读':'在看') + '的记录，点「+ 记一条」或从上方' + cfg.preTitle + '开始。';
+  }
+  if(doneEmpty){
+    doneEmpty.classList.toggle('hidden', done.length > 0);
+    doneEmpty.textContent = '还没有' + cfg.doneLabel + '的记录。';
+  }
+  const total = list.length;
+  if(bigEmpty){
+    bigEmpty.classList.toggle('hidden', total > 0);
+    const t = $('#bigEmptyText');
+    if(t) t.textContent = total === 0
+      ? '这里空空如也。点下面的按钮，记下你正在' + (currentSide==='book'?'读':'看') + '或已经' + (currentSide==='book'?'读完':'看完') + '的' + (currentSide==='book'?'书':'片') + '。'
+      : '';
+  }
+}
+function cardHTML(r, cfg){
+  const open = expanded.has(r.id);
+  const gap = daysBetween(r.startDate, r.endDate);
+  const fields = cfg.questions.map(function(q){
+    const val = (r.notes && r.notes[q.key]) || '';
+    return '<div class="note-field">' +
+      '<span class="note-label">' + q.label + '</span>' +
+      (val ? '<div class="note-text">' + esc(val) + '</div>' : '<div class="note-empty">尚未填写</div>') +
+    '</div>';
+  }).join('');
+  let actions = '';
+  if(r.status === 'doing'){
+    actions += '<button class="mini-btn primary" data-action="mark-done" data-id="' + r.id + '">' + cfg.markDone + '</button>';
+  }
+  if(r.status === 'done'){
+    actions += '<button class="mini-btn" data-action="reopen" data-id="' + r.id + '">重新' + cfg.doingLabel + '</button>';
+  }
+  actions += '<button class="mini-btn" data-action="edit" data-id="' + r.id + '">' + icon('edit') + '编辑</button>';
+  actions += '<button class="mini-btn danger" data-action="del" data-id="' + r.id + '">' + ICONS.trash + '删除</button>';
+
+  return '<li class="card' + (open ? ' open' : '') + '" data-id="' + r.id + '">' +
+    '<div class="card-head" data-action="toggle-card" data-id="' + r.id + '">' +
+      '<span class="arrow">' + ICONS.chevron + '</span>' +
+      '<div class="card-title">' +
+        '<span class="card-name">' + esc(r.name) + '</span>' +
+        (r.sub ? '<span class="card-sub">' + esc(r.sub) + '</span>' : '') +
+      '</div>' +
+      '<span class="chip">' + esc(r.category || '其他') + '</span>' +
+      '<span class="stars" data-stop="1">' + starHTML(r.rating, r.id) + '</span>' +
+    '</div>' +
+    '<div class="card-body">' +
+      '<div class="meta-line">' +
+        (r.startDate ? '<span>开始：' + esc(r.startDate) + '</span>' : '') +
+        (r.endDate ? '<span>' + cfg.doneLabel + '：' + esc(r.endDate) + '</span>' : '') +
+        (gap !== null && r.status === 'done' ? '<span>历时 ' + gap + ' 天</span>' : '') +
+        '<span class="status-chip">' + cfg.statusLabels[r.status] + '</span>' +
+      '</div>' +
+      fields +
+      '<div class="card-actions">' + actions + '</div>' +
+    '</div>' +
+  '</li>';
+}
+/* ===== 弹窗与轻提示 ===== */
+function openModal(html){
+  const root = $('#modalRoot');
+  if(root) root.innerHTML = '<div class="modal-mask" data-action="modal-mask"><div class="modal"><div class="modal-scroll">' + html + '</div></div></div>';
+}
+function closeModal(){
+  const root = $('#modalRoot');
+  if(root) root.innerHTML = '';
+  qOpen = {};
+}
+function toast(msg){
+  const el = $('#toast');
+  if(!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2200);
+}
+
+/* ===== 数据操作 ===== */
+function toggleCard(id){
+  if(expanded.has(id)) expanded.delete(id);
+  else expanded.add(id);
+  renderMainList();
+}
+function rateItem(id, n){
+  const r = getRec(id);
+  if(!r) return;
+  r.rating = n;
+  saveData();
+  refreshAll();
+  const holder = $('#dtStars');
+  if(holder && detailId === id){
+    holder.innerHTML = starHTML(n, id);
+  }
+}
+function startItem(id){
+  const r = getRec(id);
+  if(!r) return;
+  const cfg = cfgOf(state.books.indexOf(r) >= 0 ? 'book' : 'show');
+  r.status = 'doing';
+  if(!r.startDate) r.startDate = todayStr();
+  saveData();
+  refreshAll();
+  toast('已' + (cfg.side === 'book' ? '开始读' : '开始看') + '，开始日期：' + r.startDate);
+}
+function markDone(id){
+  const r = getRec(id);
+  if(!r) return;
+  const cfg = cfgOf(state.books.indexOf(r) >= 0 ? 'book' : 'show');
+  r.status = 'done';
+  if(!r.endDate) r.endDate = todayStr();
+  if(!r.startDate) r.startDate = todayStr();
+  saveData();
+  refreshAll();
+  toast('已标记为' + cfg.doneLabel + '');
+}
+function reopenItem(id){
+  const r = getRec(id);
+  if(!r) return;
+  const cfg = cfgOf(state.books.indexOf(r) >= 0 ? 'book' : 'show');
+  r.status = 'doing';
+  if(!r.startDate) r.startDate = todayStr();
+  saveData();
+  refreshAll();
+  toast('已重新' + cfg.doingLabel);
+}
+function doDelete(id){
+  state.books = state.books.filter(r => r.id !== id);
+  state.shows = state.shows.filter(r => r.id !== id);
+  expanded.delete(id);
+  if(detailId === id){ detailId = null; closeModal(); }
+  saveData();
+  refreshAll();
+  toast('已删除');
+}
+function confirmDelete(id){
+  const r = getRec(id);
+  if(!r) return;
+  pendingConfirm = { type: 'del', id: id };
+  openModal(
+    '<h3 class="modal-title">删除这条记录？</h3>' +
+    '<p style="font-size:14px;color:var(--muted);line-height:1.7">将删除「' + esc(r.name) + '」及其全部笔记，此操作不可恢复。</p>' +
+    '<div class="modal-actions">' +
+      '<button class="btn ghost" data-action="confirm-no">取消</button>' +
+      '<button class="btn danger" data-action="confirm-yes">删除</button>' +
+    '</div>'
+  );
+}
+function doClearSample(){
+  state.books = state.books.filter(r => !r.isSample);
+  state.shows = state.shows.filter(r => !r.isSample);
+  saveData();
+  refreshAll();
+  toast('示例数据已清空');
+}
+function doClearAll(){
+  state.books = [];
+  state.shows = [];
+  expanded.clear();
+  detailId = null;
+  closeModal();
+  saveData();
+  refreshAll();
+  toast('全部数据已清空');
+}
+function exportJSON(){
+  const payload = {
+    app: 'novelAnimeLog',
+    exportedAt: new Date().toISOString(),
+    books: state.books,
+    shows: state.shows
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '小说动漫记录备份-' + todayStr() + '.json';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 100);
+  toast('备份已导出');
+}
+function normalizeRec(r){
+  if(!r || typeof r !== 'object') return null;
+  const notes = {};
+  if(r.notes && typeof r.notes === 'object'){
+    ['synopsis','characters','quotes','feelings','thinking','review'].forEach(function(k){
+      notes[k] = typeof r.notes[k] === 'string' ? r.notes[k] : '';
+    });
+  }
+  return {
+    id: uid(),
+    name: String(r.name == null ? '' : r.name).slice(0, 100),
+    sub: String(r.sub == null ? '' : r.sub).slice(0, 60),
+    category: String(r.category || '其他').slice(0, 20),
+    status: ['wish','doing','done'].indexOf(r.status) >= 0 ? r.status : 'wish',
+    startDate: String(r.startDate || ''),
+    endDate: String(r.endDate || ''),
+    rating: Math.max(0, Math.min(5, Math.floor(Number(r.rating) || 0))),
+    notes: notes,
+    isSample: !!r.isSample
+  };
+}
+function doImport(mode){
+  const d = importPending;
+  importPending = null;
+  if(!d) return;
+  const nb = d.books.map(normalizeRec).filter(Boolean);
+  const ns = d.shows.map(normalizeRec).filter(Boolean);
+  if(mode === 'replace'){
+    state.books = nb;
+    state.shows = ns;
+  }else{
+    state.books = state.books.concat(nb);
+    state.shows = state.shows.concat(ns);
+  }
+  expanded.clear();
+  detailId = null;
+  saveData();
+  refreshAll();
+  closeModal();
+  toast(mode === 'replace' ? '已替换全部数据' : '已合并导入 ' + (nb.length + ns.length) + ' 条');
+}
+
+/* ===== 新增与详情 ===== */
+function openQuickForm(side, pre){
+  const cfg = cfgOf(side);
+  const isBook = side === 'book';
+  openModal(
+    '<h3 class="modal-title">' + (pre ? cfg.preAdd.slice(2) : '记一条新记录') + '</h3>' +
+    '<form id="quickForm">' +
+      '<div class="field-grid">' +
+        '<label>' + (isBook ? '书名' : '片名') + '（必填）' +
+          '<input id="qfName" type="text" maxlength="60" placeholder="输入' + (isBook ? '书名' : '片名') + '">' +
+        '</label>' +
+        '<label>' + (isBook ? '作者' : '导演') + '（选填）' +
+          '<input id="qfSub" type="text" maxlength="40" placeholder="' + (isBook ? '作者' : '导演') + '姓名">' +
+        '</label>' +
+      '</div>' +
+      (pre
+        ? '<p class="modal-note">保存后状态自动为「' + cfg.statusLabels.wish + '」，进入上方' + cfg.preTitle + '清单。</p>'
+        : '<p class="modal-note">保存后进入详情，用六张追问卡逐条填写笔记。</p>') +
+      '<div class="modal-actions">' +
+        '<button type="button" class="btn ghost" data-action="detail-close">取消</button>' +
+        '<button type="submit" class="btn primary">保存</button>' +
+      '</div>' +
+    '</form>'
+  );
+  const form = $('#quickForm');
+  if(form){
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      const nameEl = $('#qfName');
+      const name = nameEl.value.trim();
+      if(!name){ nameEl.focus(); toast('名称不能为空'); return; }
+      const rec = {
+        id: uid(),
+        name: name,
+        sub: $('#qfSub').value.trim(),
+        category: cfg.categories[0],
+        status: pre ? 'wish' : 'doing',
+        startDate: pre ? '' : todayStr(),
+        endDate: '',
+        rating: 0,
+        notes: {}
+      };
+      listOf(side).push(rec);
+      saveData();
+      refreshAll();
+      if(pre){
+        closeModal();
+        toast('已加入' + cfg.preTitle);
+      }else{
+        openDetail(rec.id);
+      }
+    });
+  }
+}
+function openDetail(id){
+  const r = getRec(id);
+  if(!r) return;
+  const side = state.books.indexOf(r) >= 0 ? 'book' : 'show';
+  const cfg = cfgOf(side);
+  const isBook = side === 'book';
+  detailId = id;
+  qOpen = {};
+  const qCards = cfg.questions.map(function(q, i){
+    const val = (r.notes && r.notes[q.key]) || '';
+    return '<div class="q-card' + (qOpen[q.key] ? ' open' : '') + '" data-key="' + q.key + '">' +
+      '<div class="q-head" data-action="q-expand" data-key="' + q.key + '">' +
+        '<span class="q-num">' + (i + 1) + '</span>' +
+        '<span class="q-title">' + q.label + '</span>' +
+        '<span class="q-done' + (val ? '' : ' hidden') + '">已填写</span>' +
+        '<span class="arrow">' + ICONS.chevron + '</span>' +
+      '</div>' +
+      '<div class="q-body">' +
+        '<p class="q-hint">' + q.hint + '</p>' +
+        '<textarea data-key="' + q.key + '" rows="4" placeholder="在这里写…">' + esc(val) + '</textarea>' +
+        '<div class="q-actions">' +
+          '<button class="btn primary small" data-action="q-save" data-key="' + q.key + '">保存此条</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+  openModal(
+    '<div class="modal-title-row">' +
+      '<h3>' + (isBook ? '书籍' : '影片') + '详情</h3>' +
+      '<button class="icon-btn" data-action="detail-close" aria-label="关闭">' + ICONS.close + '</button>' +
+    '</div>' +
+    '<div class="field-grid">' +
+      '<label>' + (isBook ? '书名' : '片名') + ' *<input id="dtName" type="text" maxlength="60" value="' + esc(r.name) + '"></label>' +
+      '<label>' + (isBook ? '作者' : '导演') + '<input id="dtSub" type="text" maxlength="40" value="' + esc(r.sub) + '"></label>' +
+      '<label>分类<select id="dtCat">' + cfg.categories.map(function(c){
+        return '<option' + (c === r.category ? ' selected' : '') + '>' + esc(c) + '</option>';
+      }).join('') + '</select></label>' +
+      '<label>状态<select id="dtStatus">' + ['wish','doing','done'].map(function(s){
+        return '<option value="' + s + '"' + (s === r.status ? ' selected' : '') + '>' + cfg.statusLabels[s] + '</option>';
+      }).join('') + '</select></label>' +
+      '<label>开始日期<input id="dtStart" type="date" value="' + esc(r.startDate || '') + '"></label>' +
+      '<label>' + cfg.doneLabel + '日期<input id="dtEnd" type="date" value="' + esc(r.endDate || '') + '"></label>' +
+      '<div class="dt-rating"><span>我的评分</span><span class="stars" id="dtStars">' + starHTML(r.rating, r.id) + '</span></div>' +
+    '</div>' +
+    '<h3 style="font-size:15px;margin-top:18px">追问笔记（点开填写、逐条保存）</h3>' + qCards +
+    '<div class="modal-actions">' +
+      '<button class="btn ghost" data-action="detail-close">关闭</button>' +
+      '<button class="btn primary" data-action="detail-save">保存全部修改</button>' +
+      '<button class="btn danger" data-action="del" data-id="' + r.id + '">' + ICONS.trash + '删除这条</button>' +
+    '</div>'
+  );
+}
+function saveDetail(){
+  const r = getRec(detailId);
+  if(!r) return;
+  const nameEl = $('#dtName');
+  const name = nameEl.value.trim();
+  if(!name){ nameEl.focus(); toast('名称不能为空'); return; }
+  r.name = name;
+  r.sub = $('#dtSub').value.trim();
+  r.category = $('#dtCat').value;
+  r.status = $('#dtStatus').value;
+  r.startDate = $('#dtStart').value;
+  r.endDate = $('#dtEnd').value;
+  if(r.status === 'doing' && !r.startDate) r.startDate = todayStr();
+  if(r.status === 'done'){
+    if(!r.endDate) r.endDate = todayStr();
+    if(!r.startDate) r.startDate = todayStr();
+  }
+  saveData();
+  refreshAll();
+  closeModal();
+  toast('已保存');
+}
+function toggleQuestion(key){
+  const card = $('#modalRoot .q-card[data-key="' + key + '"]');
+  if(!card) return;
+  const open = card.classList.toggle('open');
+  qOpen[key] = open;
+}
+function saveQuestion(key){
+  const card = $('#modalRoot .q-card[data-key="' + key + '"]');
+  if(!card) return;
+  const ta = card.querySelector('textarea');
+  const r = getRec(detailId);
+  if(!r) return;
+  if(!r.notes) r.notes = {};
+  r.notes[key] = ta.value.trim();
+  saveData();
+  const done = card.querySelector('.q-done');
+  if(done) done.classList.toggle('hidden', !r.notes[key]);
+  card.classList.remove('open');
+  qOpen[key] = false;
+  toast('已保存');
+}
+
+/* ===== 事件委托 ===== */
+document.addEventListener('click', function(e){
+  const btn = e.target.closest('[data-action]');
+  if(!btn) return;
+  const action = btn.dataset.action;
+  const id = btn.dataset.id;
+  switch(action){
+    case 'tab-book': setSide('book'); break;
+    case 'tab-show': setSide('show'); break;
+    case 'add-pre': openQuickForm(currentSide, true); break;
+    case 'add-main': openQuickForm(currentSide, false); break;
+    case 'start': startItem(id); break;
+    case 'toggle-card': toggleCard(id); break;
+    case 'rate':
+      rateItem(id, parseInt(btn.dataset.rating, 10) || 1);
+      break;
+    case 'mark-done': markDone(id); break;
+    case 'reopen': reopenItem(id); break;
+    case 'edit': openDetail(id); break;
+    case 'del': confirmDelete(id); break;
+    case 'export': exportJSON(); break;
+    case 'import': {
+      const f = $('#importFile');
+      if(f) f.click();
+      break;
+    }
+    case 'clear-sample':
+      pendingConfirm = { type: 'clear-sample' };
+      openModal(
+        '<h3 class="modal-title">清空示例数据？</h3>' +
+        '<p style="font-size:14px;color:var(--muted);line-height:1.7">将删除全部示例记录，你自己的记录不受影响。</p>' +
+        '<div class="modal-actions">' +
+          '<button class="btn ghost" data-action="confirm-no">取消</button>' +
+          '<button class="btn primary" data-action="confirm-yes">清空示例</button>' +
+        '</div>'
+      );
+      break;
+    case 'clear-all':
+      pendingConfirm = { type: 'clear-all' };
+      openModal(
+        '<h3 class="modal-title">清空全部数据？</h3>' +
+        '<p style="font-size:14px;color:var(--muted);line-height:1.7">将删除所有读书与观影记录，此操作不可恢复。建议先导出备份。</p>' +
+        '<div class="modal-actions">' +
+          '<button class="btn ghost" data-action="confirm-no">取消</button>' +
+          '<button class="btn danger" data-action="confirm-yes">清空全部</button>' +
+        '</div>'
+      );
+      break;
+    case 'confirm-yes': {
+      const p = pendingConfirm;
+      closeModal();
+      pendingConfirm = null;
+      if(!p) break;
+      if(p.type === 'del') doDelete(p.id);
+      else if(p.type === 'clear-sample') doClearSample();
+      else if(p.type === 'clear-all') doClearAll();
+      break;
+    }
+    case 'confirm-no': closeModal(); pendingConfirm = null; break;
+    case 'detail-close': closeModal(); break;
+    case 'modal-mask': {
+      if(e.target.classList.contains('modal-mask')) closeModal();
+      break;
+    }
+    case 'q-expand': toggleQuestion(btn.dataset.key); break;
+    case 'q-save': saveQuestion(btn.dataset.key); break;
+    case 'detail-save': saveDetail(); break;
+    case 'import-merge': doImport('merge'); break;
+    case 'import-replace': doImport('replace'); break;
+  }
+});
+
+/* ===== Tab 切换 ===== */
+function setSide(side){
+  currentSide = side;
+  const tb = $('#tab-book');
+  const ts = $('#tab-show');
+  if(tb) tb.classList.toggle('active', side === 'book');
+  if(ts) ts.classList.toggle('active', side === 'show');
+  refreshAll();
+}
+
+/* ===== 导入文件 ===== */
+(function bindImport(){
+  const f = $('#importFile');
+  if(!f) return;
+  f.addEventListener('change', function(e){
+    const file = e.target.files && e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(){
+      try{
+        const data = JSON.parse(reader.result);
+        if(!data || !Array.isArray(data.books) || !Array.isArray(data.shows)){
+          throw new Error('bad');
+        }
+        importPending = data;
+        openModal(
+          '<h3 class="modal-title">导入备份</h3>' +
+          '<p style="font-size:14px;color:var(--muted);line-height:1.7">' +
+            '检测到 ' + data.books.length + ' 条读书记录、' + data.shows.length + ' 条观影记录。请选择导入方式（不设条数上限）：' +
+          '</p>' +
+          '<div class="modal-actions">' +
+            '<button class="btn primary" data-action="import-merge">合并到现有数据</button>' +
+            '<button class="btn danger" data-action="import-replace">替换全部数据</button>' +
+            '<button class="btn ghost" data-action="detail-close">取消</button>' +
+          '</div>'
+        );
+      }catch(err){
+        toast('导入失败：文件不是有效的备份 JSON');
+      }
+      f.value = '';
+    };
+    reader.onerror = function(){ toast('读取文件失败'); };
+    reader.readAsText(file);
+  });
+})();
+
+/* ===== 启动 ===== */
+loadData();
+setSide('book');
+refreshAll();
+
+</script>
+</body>
+</html>
